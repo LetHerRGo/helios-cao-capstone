@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function LoginPage() {
   const [username, setUsername] = useState("");
@@ -7,44 +8,51 @@ function LoginPage() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const API_URL = import.meta.env.VITE_APP_API_URL;
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!username || !password) {
-      setError("用户名和密码不能为空！");
+      setError("Username or passwordd cannot be empty!");
       return;
     }
 
     // authentication
-    if (username === "admin" && password === "123456") {
-      setError("");
-      localStorage.setItem("isAuthenticated", "true"); // save login status
-      navigate("/home"); // direct to /home after login
-    } else {
-      setError("用户名或密码错误！");
+    try {
+      const response = await axios.post(`${API_URL}login`, {
+        username,
+        password,
+      });
+      // Store the token or handle response
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("isAuthenticated", true);
+      navigate("/home");
+    } catch (err) {
+      setError(err.response.data.message || "An error occurred");
     }
   };
 
   return (
     <div className="login-container">
       <form onSubmit={handleSubmit} className="login-form">
-        <h2>用户登录</h2>
+        <h2>Login</h2>
         {error && <p className="error">{error}</p>}
-        <label>用户名:</label>
+        <label>Username:</label>
         <input
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          placeholder="输入用户名"
+          placeholder="Username"
         />
-        <label>密码:</label>
+        <label>Password:</label>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="输入密码"
+          placeholder="Password"
         />
-        <button type="submit">登录</button>
+        <button type="submit">Login</button>
       </form>
     </div>
   );
