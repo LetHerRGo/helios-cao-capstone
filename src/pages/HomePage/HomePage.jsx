@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 function HomePage() {
   const navigate = useNavigate();
-  const [ctnrNum, setCtnrNum] = useState();
+  const [ctnrNums, setctnrNums] = useState();
   const [ctnrData, setCtnrData] = useState([]);
   const [error, setError] = useState("");
 
@@ -15,7 +15,7 @@ function HomePage() {
     }
   }, [navigate]);
 
-  const handleLogout = () => {
+  const handleLogout = (e) => {
     e.preventDefault();
     localStorage.removeItem("isAuthenticated"); // clear login status
     navigate("/");
@@ -24,7 +24,7 @@ function HomePage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await tracking(ctnrNum);
+      const data = await tracking(ctnrNums);
       const equipment = data.ThirdPartyIntermodalShipment.Equipment[0];
 
       const extractedData = {
@@ -33,6 +33,7 @@ function HomePage() {
         location: equipment.Event?.Location?.Station || "Unknown",
         eventTime: equipment.Event?.Time || "N/A",
         eventDescription: equipment.Event?.Description || "N/A",
+        ETA: equipment.ETA?.Time || "N/A",
         customsStatus: equipment.CustomsHold?.Description || "N/A",
         storageLastFreeDay: equipment.StorageCharge?.LastFreeDay || "N/A",
       };
@@ -52,8 +53,8 @@ function HomePage() {
         <label>Container#:</label>
         <input
           type="text"
-          value={ctnrNum}
-          onChange={(e) => setCtnrNum(e.target.value)}
+          value={ctnrNums}
+          onChange={(e) => setctnrNums(e.target.value)}
           placeholder="Container#"
         />
         <button type="submit">Submit</button>
@@ -79,6 +80,9 @@ function HomePage() {
               <strong>Customs Status:</strong> {ctnrData.customsStatus}
             </li>
             <li>
+              <strong>ETA:</strong> {ctnrData.ETA}
+            </li>
+            <li>
               <strong>Last Free Storage Day:</strong>{" "}
               {ctnrData.storageLastFreeDay}
             </li>
@@ -87,7 +91,6 @@ function HomePage() {
           <p>No tracking data available.</p>
         )}
       </ul>
-      : (<p>No tracking data available.</p>)
     </div>
   );
 }

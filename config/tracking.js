@@ -50,8 +50,9 @@ export async function tracking(ctnrNum) {
     }
     try {
     const response = await axios.get(trackingUrl, { headers, params: trackingParam } );
-    
+    console.log(response.data)
     return response.data;
+    
     } catch(error) {
         console.error('Error fetching tracking data:', error);
         return null;
