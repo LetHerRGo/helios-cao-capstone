@@ -27,7 +27,7 @@ function LoginPage() {
       // Store the token or handle response
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("isAuthenticated", true);
-      navigate("/home");
+      navigate("/track");
     } catch (err) {
       setError(err.response.data.message || "An error occurred");
     }

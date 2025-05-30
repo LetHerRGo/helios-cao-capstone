@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { tracking } from "../../../config/tracking";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Track() {
   const navigate = useNavigate();
-  const [ctnrNums, setctnrNums] = useState();
+  const [ctnrNums, setCtnrNums] = useState();
   const [ctnrData, setCtnrData] = useState([]);
   const [error, setError] = useState("");
 
@@ -43,11 +42,16 @@ function Track() {
           },
         }
       );
-      console.log("Response:", response.data);
-
       setCtnrData(response.data.equipmentList);
     } catch (error) {
-      console.log(error);
+      if (error.response?.status === 401) {
+        localStorage.removeItem("isAuthenticated");
+        localStorage.removeItem("token");
+        navigate("/login");
+      } else {
+        console.error("Request error:", error);
+        setError("Failed to fetch tracking data.");
+      }
     }
   };
 
@@ -62,7 +66,7 @@ function Track() {
         <input
           type="text"
           value={ctnrNums}
-          onChange={(e) => setctnrNums(e.target.value)}
+          onChange={(e) => setCtnrNums(e.target.value)}
           placeholder="Container#"
         />
         <button type="submit">Submit</button>
