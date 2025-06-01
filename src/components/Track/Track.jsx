@@ -57,8 +57,8 @@ function Track() {
 
   return (
     <div style={{ textAdivgn: "center", margin: "50px" }}>
-      <h1>🎉 欢迎来到主页！</h1>
-      <button onClick={handleLogout}>退出登录</button>
+      <h1>🎉WELCOME TO THE FREIGHTAIO</h1>
+      <button onClick={handleLogout}>Log out</button>
       <form className="containerInput-form" onSubmit={handleSubmit}>
         <h2>Tracking containers</h2>
         {error && <p className="error">{error}</p>}

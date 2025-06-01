@@ -3,19 +3,46 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function AddShipment() {
-  const navigate = useNavigate();
-  const [ctnrNum, setCtnrNum] = useState();
-  const [agentName, setAgentName] = useState();
-  const [clientName, setClientName] = useState();
-  const [refNum, setRefNum] = useState();
-
+  const [ctnrNum, setCtnrNum] = useState("");
+  const [agentName, setAgentName] = useState("");
+  const [clientName, setClientName] = useState("");
+  const [refNum, setRefNum] = useState("");
+  const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+  const [agents, setAgents] = useState([]);
+  const [clients, setClients] = useState([]);
+
+  const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_APP_API_URL;
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem("isAuthenticated");
     if (!isAuthenticated) {
       navigate("/"); // if not login, direct to /
     }
+
+    const fetchAgents = async () => {
+      try {
+        const response = await axios.get(`${apiUrl}agents`);
+        setAgents(response.data); // Assuming response is an array of agent names
+      } catch (error) {
+        console.error("Error fetching agent names:", error);
+        setError("Failed to fetch agent names.");
+      }
+    };
+
+    const fetchClients = async () => {
+      try {
+        const response = await axios.get(`${apiUrl}clients`);
+        setClients(response.data);
+      } catch (error) {
+        console.error("Error fetching client names:", error);
+        setError("Failed to fetch client names.");
+      }
+    };
+
+    fetchClients();
+    fetchAgents();
   }, [navigate]);
 
   const handleLogout = (e) => {
@@ -27,11 +54,18 @@ function AddShipment() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const apiUrl = import.meta.env.VITE_APP_API_URL;
-    const token = localStorage.getItem("token");
+    const containerFormat = /^[A-Z]{4}\d{7}$/;
+    if (!containerFormat.test(ctnrNum)) {
+      setError(
+        "Invalid container number. Format must be 4 letters followed by 7 digits (e.g., ZCSU4028251)."
+      );
+      return;
+    }
 
+    const token = localStorage.getItem("token");
     if (!token) {
       console.error("Token not found in localStorage");
+      return;
     }
 
     try {
@@ -50,6 +84,12 @@ function AddShipment() {
           },
         }
       );
+      setSuccess(`Container '${ctnrNum}' added successfully.`);
+      setError("");
+      setCtnrNum("");
+      setAgentName("");
+      setClientName("");
+      setRefNum("");
     } catch (error) {
       if (error.response?.status === 401) {
         localStorage.removeItem("isAuthenticated");
@@ -69,6 +109,7 @@ function AddShipment() {
       <form className="containerInput-form" onSubmit={handleSubmit}>
         <h2>Adding containers</h2>
         {error && <p className="error">{error}</p>}
+        {success && <p className="success">{success}</p>}
         <label>Reference#:</label>
         <input
           type="text"
@@ -76,7 +117,6 @@ function AddShipment() {
           onChange={(e) => setRefNum(e.target.value)}
           placeholder="Reference#"
         />
-        <label>Agent Name:</label>
         <label>Container#:</label>
         <input
           type="text"
@@ -85,19 +125,29 @@ function AddShipment() {
           placeholder="Container#"
         />
         <label>Agent Name:</label>
-        <input
-          type="text"
+        <select
           value={agentName}
           onChange={(e) => setAgentName(e.target.value)}
-          placeholder="Agent Name"
-        />
+        >
+          <option value="">Select an agent</option>
+          {agents.map((agent) => (
+            <option key={agent.id} value={agent.name}>
+              {agent.name}
+            </option>
+          ))}
+        </select>
         <label>Client Name:</label>
-        <input
-          type="text"
+        <select
           value={clientName}
           onChange={(e) => setClientName(e.target.value)}
-          placeholder="Client Name"
-        />
+        >
+          <option value="">Select an client</option>
+          {clients.map((client) => (
+            <option key={client.id} value={client.name}>
+              {client.name}
+            </option>
+          ))}
+        </select>
         <button type="submit">Add Container</button>
       </form>
 
