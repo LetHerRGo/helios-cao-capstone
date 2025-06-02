@@ -48,12 +48,14 @@ function AddShipment() {
   const handleLogout = (e) => {
     e.preventDefault();
     localStorage.removeItem("isAuthenticated"); // clear login status
+    localStorage.removeItem("token");
     navigate("/");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // validating container number format to ABCD1234567
     const containerFormat = /^[A-Z]{4}\d{7}$/;
     if (!containerFormat.test(ctnrNum)) {
       setError(
