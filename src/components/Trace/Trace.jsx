@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import DeleteIcon from "../../assets/icon/delete_24dp.svg?react";
 
 function Track() {
   const navigate = useNavigate();
@@ -45,17 +46,28 @@ function Track() {
     navigate("/");
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`${apiUrl}trace/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // Filter out the deleted row from state
+      setCtnrData((prevData) => prevData.filter((item) => item.id !== id));
+    } catch (error) {
+      console.error("Delete failed:", error);
+      setError("Failed to delete container.");
+    }
   };
 
   return (
     <div style={{ textAlign: "center", margin: "50px" }}>
       <h1>🎉WELCOME TO THE FREIGHTAIO</h1>
       <button onClick={handleLogout}>Log out</button>
-      <form className="containerInput-form" onSubmit={handleSubmit}>
-        {error && <p className="error">{error}</p>}
-      </form>
+      {error && <p className="error">{error}</p>}
+
       <h2 className="table-title">Tracking Information</h2>
 
       <div className="tracking-table">
@@ -74,6 +86,7 @@ function Track() {
               <th>Customs Status</th>
               <th>ETA</th>
               <th>Last Free Day</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -84,7 +97,6 @@ function Track() {
                 <td>{item.agent_name}</td>
                 <td>{item.client_name}</td>
                 <td>{item.status}</td>
-
                 <td>{item.event_description}</td>
                 <td>{new Date(item.event_time).toLocaleString()}</td>
                 <td>{item.location}</td>
@@ -96,6 +108,15 @@ function Track() {
                   {item.storage_last_free_day
                     ? new Date(item.storage_last_free_day).toLocaleDateString()
                     : "N/A"}
+                </td>
+                <td>
+                  <button
+                    onClick={() => handleDelete(item.id)}
+                    className="delete-btn"
+                    title="Delete"
+                  >
+                    <DeleteIcon />
+                  </button>
                 </td>
               </tr>
             ))}
