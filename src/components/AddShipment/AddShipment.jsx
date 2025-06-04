@@ -86,7 +86,7 @@ function AddShipment() {
           },
         }
       );
-      setSuccess(`Container '${ctnrNum}' added successfully.`);
+      setSuccess(response.data?.message || "Container added successfully.");
       setError("");
       setCtnrNum("");
       setAgentName("");
@@ -105,7 +105,7 @@ function AddShipment() {
   };
 
   return (
-    <div style={{ textAdivgn: "center", margin: "50px" }}>
+    <div style={{ textAlign: "center", margin: "50px" }}>
       <h1>🎉WELCOME TO THE FREIGHTAIO</h1>
       <button onClick={handleLogout}>Log out</button>
       <form className="containerInput-form" onSubmit={handleSubmit}>
