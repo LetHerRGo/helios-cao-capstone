@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Sidebar from "../Sidebar/Sidebar.jsx";
+import { Box, Flex, Table } from "@chakra-ui/react";
 
 function AddShipment() {
   const [ctnrNum, setCtnrNum] = useState("");
@@ -44,13 +46,6 @@ function AddShipment() {
     fetchClients();
     fetchAgents();
   }, [navigate]);
-
-  const handleLogout = (e) => {
-    e.preventDefault();
-    localStorage.removeItem("isAuthenticated"); // clear login status
-    localStorage.removeItem("token");
-    navigate("/");
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -105,56 +100,57 @@ function AddShipment() {
   };
 
   return (
-    <div style={{ textAlign: "center", margin: "50px" }}>
-      <h1>🎉WELCOME TO THE FREIGHTAIO</h1>
-      <button onClick={handleLogout}>Log out</button>
-      <form className="containerInput-form" onSubmit={handleSubmit}>
-        <h2>Adding containers</h2>
-        {error && <p className="error">{error}</p>}
-        {success && <p className="success">{success}</p>}
-        <label>Reference#:</label>
-        <input
-          type="text"
-          value={refNum}
-          onChange={(e) => setRefNum(e.target.value)}
-          placeholder="Reference#"
-        />
-        <label>Container#:</label>
-        <input
-          type="text"
-          value={ctnrNum}
-          onChange={(e) => setCtnrNum(e.target.value)}
-          placeholder="Container#"
-        />
-        <label>Agent Name:</label>
-        <select
-          value={agentName}
-          onChange={(e) => setAgentName(e.target.value)}
-        >
-          <option value="">Select an agent</option>
-          {agents.map((agent) => (
-            <option key={agent.id} value={agent.name}>
-              {agent.name}
-            </option>
-          ))}
-        </select>
-        <label>Client Name:</label>
-        <select
-          value={clientName}
-          onChange={(e) => setClientName(e.target.value)}
-        >
-          <option value="">Select an client</option>
-          {clients.map((client) => (
-            <option key={client.id} value={client.name}>
-              {client.name}
-            </option>
-          ))}
-        </select>
-        <button type="submit">Add Container</button>
-      </form>
+    <Flex>
+      <Sidebar />
+      <Box ml="50px" p="6" w="full">
+        <h1>🎉WELCOME TO THE FREIGHTAIO</h1>
 
-      <div></div>
-    </div>
+        <form className="containerInput-form" onSubmit={handleSubmit}>
+          <h2>Adding containers</h2>
+          {error && <p className="error">{error}</p>}
+          {success && <p className="success">{success}</p>}
+          <label>Reference#:</label>
+          <input
+            type="text"
+            value={refNum}
+            onChange={(e) => setRefNum(e.target.value)}
+            placeholder="Reference#"
+          />
+          <label>Container#:</label>
+          <input
+            type="text"
+            value={ctnrNum}
+            onChange={(e) => setCtnrNum(e.target.value)}
+            placeholder="Container#"
+          />
+          <label>Agent Name:</label>
+          <select
+            value={agentName}
+            onChange={(e) => setAgentName(e.target.value)}
+          >
+            <option value="">Select an agent</option>
+            {agents.map((agent) => (
+              <option key={agent.id} value={agent.name}>
+                {agent.name}
+              </option>
+            ))}
+          </select>
+          <label>Client Name:</label>
+          <select
+            value={clientName}
+            onChange={(e) => setClientName(e.target.value)}
+          >
+            <option value="">Select an client</option>
+            {clients.map((client) => (
+              <option key={client.id} value={client.name}>
+                {client.name}
+              </option>
+            ))}
+          </select>
+          <button type="submit">Add Container</button>
+        </form>
+      </Box>
+    </Flex>
   );
 }
 
