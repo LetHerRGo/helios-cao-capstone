@@ -1,15 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Flex, Text, IconButton, Box, Avatar, Heading } from "@chakra-ui/react";
-import {
-  FiMenu,
-  FiHome,
-  FiCalendar,
-  FiUser,
-  FiDollarSign,
-  FiBriefcase,
-  FiSettings,
-} from "react-icons/fi";
+import { FiMenu } from "react-icons/fi";
 import NavItem from "./NavItem.jsx";
 import { CiLogout, CiSearch } from "react-icons/ci";
 import { MdOutlineDirectionsRailway } from "react-icons/md";
