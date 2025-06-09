@@ -23,7 +23,7 @@ export default function NavItem({ icon, title, active, navSize, onClick }) {
         justifyContent={navSize === "small" ? "center" : "flex-start"}
         bg={active ? "#AEC8CA" : "transparent"}
         borderRadius="8px"
-        p={3}
+        p={2}
         _hover={{
           bg: "#AEC8CA",
           boxShadow: "none", // Removes shadow on hover
@@ -39,12 +39,18 @@ export default function NavItem({ icon, title, active, navSize, onClick }) {
       >
         <Icon
           as={icon}
-          fontSize="xl"
-          color={active ? "#82AAAD" : "gray.500"}
+          size="lg"
+          color={active ? "#82AAAD" : "#275765"}
           mr={navSize === "small" ? 0 : 2}
         />
         {navSize === "large" && (
-          <Text color={active ? "#82AAAD" : "gray.500"}>{title}</Text>
+          <Text
+            color={active ? "#82AAAD" : "#275765"}
+            fontSize="xl"
+            hideBelow="md"
+          >
+            {title}
+          </Text>
         )}
       </Button>
     </Flex>

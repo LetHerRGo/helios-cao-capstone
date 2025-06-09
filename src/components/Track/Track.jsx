@@ -1,9 +1,19 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./Track.scss";
-import Sidebar from "../Sidebar/Sidebar.jsx";
-import { Box, Flex, Table } from "@chakra-ui/react";
+
+import {
+  Box,
+  Table,
+  Flex,
+  Heading,
+  Highlight,
+  Alert,
+  CloseButton,
+  Field,
+  Textarea,
+  Button,
+} from "@chakra-ui/react";
 
 function Track() {
   const navigate = useNavigate();
@@ -41,6 +51,7 @@ function Track() {
       );
       setCtnrData(response.data.equipmentList);
       setError("");
+      setCtnrNums("");
     } catch (error) {
       if (error.response?.status === 401) {
         localStorage.removeItem("isAuthenticated");
@@ -48,91 +59,95 @@ function Track() {
         navigate("/login");
       } else {
         console.error("Request error:", error);
-        setError("Failed to fetch tracking data.");
+        setError(error.response.data.message);
       }
     }
   };
 
   return (
-    <Flex>
-      <Sidebar />
-      <Box ml="50px" p="6" w="full">
-        <h1>🎉WELCOME TO THE FREIGHTAIO</h1>
-
+    <Box ml="50px" p="6" w="auto">
+      <Flex direction="column" justify="center" gap="5">
+        <Heading size="6xl" letterSpacing="tight">
+          <Highlight query="FREIGHTAIO" styles={{ color: "#79a5b2" }}>
+            WELCOME TO THE FREIGHTAIO
+          </Highlight>
+        </Heading>
         <form className="containerInput-form" onSubmit={handleSubmit}>
-          <h2>Tracking containers</h2>
-          {error && <p className="error">{error}</p>}
-          <h2>Container#:</h2>
-          <textarea
-            rows={5}
-            value={ctnrNums}
-            onChange={(e) => setCtnrNums(e.target.value)}
-            placeholder="Enter one or more container numbers (e.g. CNRU123456,CNRU234567)"
-            style={{ width: "100%", resize: "vertical" }}
-          />
-          <button type="submit">Submit</button>
+          {error && (
+            <Alert.Root status="error">
+              <Alert.Indicator />
+              <Alert.Content>
+                <Alert.Title>Error!</Alert.Title>
+                <Alert.Description>{error}</Alert.Description>
+              </Alert.Content>
+              <CloseButton
+                pos="relative"
+                top="-2"
+                insetEnd="-2"
+                variant="ghost"
+                onClick={() => setError("")}
+              />
+            </Alert.Root>
+          )}
+          <Field.Root required>
+            <Field.Label>
+              Container number
+              <Field.RequiredIndicator />:
+            </Field.Label>
+
+            <Textarea
+              rows="5"
+              placeholder="Enter one or more container numbers (e.g. CNRU123456,CNRU234567)"
+              variant="outline"
+              value={ctnrNums}
+              onChange={(e) => setCtnrNums(e.target.value)}
+            />
+          </Field.Root>
+          <Flex justify="flex-end" mt="4">
+            <Button
+              type="submit"
+              color="#275765"
+              backgroundColor="#d8ecee"
+              variant="solid"
+            >
+              Submit
+            </Button>
+          </Flex>
         </form>
-        <h2 className="table-title">Tracking Information</h2>
-        <Table.Root size="sm" striped>
-          <Table.Header>
-            <Table.Row>
-              <Table.ColumnHeader className="track-table__cell">
-                Equipment ID
-              </Table.ColumnHeader>
-              <Table.ColumnHeader className="track-table__cell">
-                Status
-              </Table.ColumnHeader>
-              <Table.ColumnHeader className="track-table__cell">
-                Last Event
-              </Table.ColumnHeader>
-              <Table.ColumnHeader className="track-table__cell">
-                Last Event Time
-              </Table.ColumnHeader>
-              <Table.ColumnHeader className="track-table__cell">
-                Location
-              </Table.ColumnHeader>
-              <Table.ColumnHeader className="track-table__cell">
-                Customs Status
-              </Table.ColumnHeader>
-              <Table.ColumnHeader className="track-table__cell">
-                ETA
-              </Table.ColumnHeader>
-              <Table.ColumnHeader className="track-table__cell">
-                Last Storage Day
-              </Table.ColumnHeader>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {ctnrData.map((item, index) => (
-              <Table.Row key={index} className="track-table__row">
-                <Table.Cell className="track-table__cell">{item.id}</Table.Cell>
-                <Table.Cell className="track-table__cell">
-                  {item.status}
-                </Table.Cell>
-                <Table.Cell className="track-table__cell">
-                  {item.eventDescription}
-                </Table.Cell>
-                <Table.Cell className="track-table__cell">
-                  {item.eventTime}
-                </Table.Cell>
-                <Table.Cell className="track-table__cell">
-                  {item.location}
-                </Table.Cell>
-                <Table.Cell className="track-table__cell">
-                  {item.customsStatus}
-                </Table.Cell>
-                <Table.Cell className="track-table__cell">
-                  {item.ETA}
-                </Table.Cell>
-                <Table.Cell className="track-table__cell">
-                  {item.storageLastFreeDay}
-                </Table.Cell>
+        <Box overflowX="auto">
+          <Table.Root size="sm" striped>
+            <Table.Header>
+              <Table.Row>
+                <Table.ColumnHeader>Equipment ID</Table.ColumnHeader>
+                <Table.ColumnHeader>Status</Table.ColumnHeader>
+                <Table.ColumnHeader>Last Event</Table.ColumnHeader>
+                <Table.ColumnHeader>Last Event Time</Table.ColumnHeader>
+                <Table.ColumnHeader>Location</Table.ColumnHeader>
+                <Table.ColumnHeader>Customs Status</Table.ColumnHeader>
+                <Table.ColumnHeader>Destination</Table.ColumnHeader>
+                <Table.ColumnHeader>ETA</Table.ColumnHeader>
+                <Table.ColumnHeader>Last Free Day</Table.ColumnHeader>
               </Table.Row>
-            ))}
-          </Table.Body>
-        </Table.Root>
-      </Box>
-    </Flex>
+            </Table.Header>
+            <Table.Body>
+              {ctnrData.map((item, index) => (
+                <Table.Row key={index}>
+                  <Table.Cell>{item.id}</Table.Cell>
+                  <Table.Cell>{item.status}</Table.Cell>
+                  <Table.Cell>{item.eventDescription}</Table.Cell>
+                  <Table.Cell>{item.eventTime}</Table.Cell>
+                  <Table.Cell>{item.location}</Table.Cell>
+                  <Table.Cell>{item.customsStatus}</Table.Cell>
+                  <Table.Cell>{item.destination}</Table.Cell>
+                  <Table.Cell>{item.ETA}</Table.Cell>
+                  <Table.Cell>{item.storageLastFreeDay}</Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table.Root>
+        </Box>
+      </Flex>
+    </Box>
   );
 }
 

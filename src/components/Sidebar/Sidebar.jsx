@@ -6,12 +6,20 @@ import NavItem from "./NavItem.jsx";
 import { CiLogout, CiSearch } from "react-icons/ci";
 import { MdOutlineDirectionsRailway } from "react-icons/md";
 import { CgPlayListAdd } from "react-icons/cg";
-import { NavLink } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
-export default function Sidebar() {
-  const [navSize, changeNavSize] = useState("large");
+export default function Sidebar({ navSize, onToggleNav }) {
+  // const [navSize, changeNavSize] = useState("large");
   const navigate = useNavigate();
   const location = useLocation();
+
+  const token = localStorage.getItem("token");
+  let username = "";
+
+  if (token) {
+    const decoded = jwtDecode(token);
+    username = decoded.username;
+  }
 
   const handleLogout = (e) => {
     localStorage.removeItem("isAuthenticated");
@@ -28,7 +36,7 @@ export default function Sidebar() {
       marginTop="2.5vh"
       boxShadow="0 4px 12px 0 rgba(0, 0, 0, 0.05)"
       borderRadius={navSize == "small" ? "15px" : "30px"}
-      w={navSize == "small" ? "75px" : "250px"}
+      w={navSize == "small" ? "75px" : "210px"}
       flexDir="column"
       justifyContent="space-between"
       transition="all 0.3s ease"
@@ -51,37 +59,31 @@ export default function Sidebar() {
           }}
           _focus={{ boxShadow: "none" }}
           _active={{ boxShadow: "none" }}
-          onClick={() => {
-            if (navSize == "small") changeNavSize("large");
-            else changeNavSize("small");
-          }}
+          onClick={onToggleNav}
         >
           <FiMenu />
         </IconButton>
-        <NavLink to="/trace" style={{ width: "100%" }}>
-          <NavItem
-            navSize={navSize}
-            icon={MdOutlineDirectionsRailway}
-            title="Trace"
-            active={location.pathname === "/trace"}
-          />
-        </NavLink>
-        <NavLink to="/track" style={{ width: "100%" }}>
-          <NavItem
-            navSize={navSize}
-            icon={CiSearch}
-            title="Track"
-            active={location.pathname === "/track"}
-          />
-        </NavLink>
-        <NavLink to="/addshipment" style={{ width: "100%" }}>
-          <NavItem
-            navSize={navSize}
-            icon={CgPlayListAdd}
-            title="Add Shipment"
-            active={location.pathname === "/addshipment"}
-          />
-        </NavLink>
+        <NavItem
+          navSize={navSize}
+          icon={MdOutlineDirectionsRailway}
+          title="Trace"
+          active={location.pathname === "/home/trace"}
+          onClick={() => navigate("/home/trace")}
+        />
+        <NavItem
+          navSize={navSize}
+          icon={CiSearch}
+          title="Track"
+          active={location.pathname === "/home/track"}
+          onClick={() => navigate("/home/track")}
+        />
+        <NavItem
+          navSize={navSize}
+          icon={CgPlayListAdd}
+          title="Add Shipment"
+          active={location.pathname === "/home/addshipment"}
+          onClick={() => navigate("/home/addshipment")}
+        />
         <NavItem
           navSize={navSize}
           icon={CiLogout}
@@ -97,18 +99,25 @@ export default function Sidebar() {
         alignItems={navSize == "small" ? "center" : "flex-start"}
         mb={4}
       >
-        <Box display={navSize == "small" ? "none" : "flex"} />
         <Flex mt={4} align="center">
-          {/* <Avatar size="sm" /> */}
+          <Avatar.Root>
+            <Avatar.Fallback name={username} />
+            <Avatar.Image src="https://bit.ly/broken-link" />
+          </Avatar.Root>
           <Flex
             flexDir="column"
             ml={4}
             display={navSize == "small" ? "none" : "flex"}
           >
-            <Heading as="h3" size="sm">
-              Sylwia Weller
+            <Heading
+              as="h3"
+              size="lg"
+              color="#275765"
+              display={navSize == "small" ? "none" : "flex"}
+              hideBelow="md"
+            >
+              {username}
             </Heading>
-            <Text color="gray">Admin</Text>
           </Flex>
         </Flex>
       </Flex>

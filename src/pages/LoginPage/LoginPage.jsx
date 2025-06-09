@@ -1,6 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {
+  Box,
+  Button,
+  Field,
+  Input,
+  VStack,
+  Text,
+  Heading,
+  Flex,
+} from "@chakra-ui/react";
+import Logo from "../../assets/logo/logo_with_text.svg?react";
 
 function LoginPage() {
   const [username, setUsername] = useState("");
@@ -14,47 +25,103 @@ function LoginPage() {
     e.preventDefault();
 
     if (!username || !password) {
-      setError("Username or passwordd cannot be empty!");
+      setError("Username or password cannot be empty!");
       return;
     }
 
-    // authentication
     try {
       const response = await axios.post(`${API_URL}login`, {
         username,
         password,
       });
-      // Store the token or handle response
+
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("isAuthenticated", true);
-      navigate("/trace");
+      navigate("/home/trace");
     } catch (err) {
-      setError(err.response.data.message || "An error occurred");
+      setError(err.response?.data?.message || "An error occurred");
     }
   };
 
   return (
-    <div className="login-container">
-      <form onSubmit={handleSubmit} className="login-form">
-        <h2>Login</h2>
-        {error && <p className="error">{error}</p>}
-        <label>Username:</label>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Username"
-        />
-        <label>Password:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-        />
-        <button type="submit">Login</button>
-      </form>
-    </div>
+    <Box
+      minH="100vh"
+      minW="100vw"
+      bg="#d8ecee"
+      display="flex"
+      flexDir="column"
+      alignItems="center"
+      justifyContent="flex-start"
+      px={4}
+    >
+      <Logo style={{ width: "400px", height: "400px" }} />
+
+      <Box
+        bg="white"
+        maxW="400px"
+        w="100%"
+        p={8}
+        borderRadius="lg"
+        boxShadow="lg"
+      >
+        <VStack spacing={5} align="stretch">
+          <Heading textAlign="center" color="#275765">
+            Login
+          </Heading>
+
+          {error && (
+            <Text color="red.500" fontSize="sm" textAlign="center">
+              {error}
+            </Text>
+          )}
+
+          <form onSubmit={handleSubmit}>
+            <VStack spacing={4}>
+              <Field.Root>
+                <Field.Label>
+                  Username
+                  <Field.RequiredIndicator />
+                </Field.Label>
+                <Input
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Enter your username"
+                  borderColor="#79a5b2"
+                  css={{ "--focus-color": "#275765" }}
+                />
+                <Field.ErrorText>{error}</Field.ErrorText>
+              </Field.Root>
+
+              <Field.Root>
+                <Field.Label>
+                  Password
+                  <Field.RequiredIndicator />
+                </Field.Label>
+                <Input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  borderColor="#79a5b2"
+                  css={{ "--focus-color": "#275765" }}
+                />
+                <Field.ErrorText>{error}</Field.ErrorText>
+              </Field.Root>
+
+              <Button
+                type="submit"
+                color="white"
+                bg="#e1929b"
+                _hover={{ bg: "#d87f8c" }}
+                width="100%"
+              >
+                Login
+              </Button>
+            </VStack>
+          </form>
+        </VStack>
+      </Box>
+    </Box>
   );
 }
 
