@@ -167,14 +167,6 @@ function AddShipment() {
               onChange={(e) => setRefNum(e.target.value)}
             />
           </Field.Root>
-          {/* <label>Reference#:</label>
-          <input
-            type="text"
-            value={refNum}
-            onChange={(e) => setRefNum(e.target.value)}
-            placeholder="Reference#"
-          /> */}
-
           <Field.Root>
             <Field.Label>
               Container#:
@@ -187,15 +179,6 @@ function AddShipment() {
               placeholder="Container#"
             />
           </Field.Root>
-
-          {/* <label>Container#:</label>
-          <input
-            type="text"
-            value={ctnrNum}
-            onChange={(e) => setCtnrNum(e.target.value)}
-            placeholder="Container#"
-          /> */}
-
           <Field.Root>
             <Field.Label>Agent Name:</Field.Label>
             <NativeSelect.Root
@@ -213,20 +196,6 @@ function AddShipment() {
               <NativeSelect.Indicator />
             </NativeSelect.Root>
           </Field.Root>
-
-          {/* <label>Agent Name:</label>
-          <select
-            value={agentName}
-            onChange={(e) => setAgentName(e.target.value)}
-          >
-            <option value="">Select an agent</option>
-            {agents.map((agent) => (
-              <option key={agent.id} value={agent.name}>
-                {agent.name}
-              </option>
-            ))}
-          </select> */}
-
           <Field.Root>
             <Field.Label>Client Name:</Field.Label>
             <NativeSelect.Root
@@ -244,19 +213,6 @@ function AddShipment() {
               <NativeSelect.Indicator />
             </NativeSelect.Root>
           </Field.Root>
-
-          {/* <label>Client Name:</label>
-          <select
-            value={clientName}
-            onChange={(e) => setClientName(e.target.value)}
-          >
-            <option value="">Select an client</option>
-            {clients.map((client) => (
-              <option key={client.id} value={client.name}>
-                {client.name}
-              </option>
-            ))}
-          </select> */}
           <Flex justify="flex-end" mt="4">
             <Button
               type="submit"
