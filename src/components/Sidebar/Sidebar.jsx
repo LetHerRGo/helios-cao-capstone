@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Flex, Text, IconButton, Box, Avatar, Heading } from "@chakra-ui/react";
+import { Flex, IconButton, Box, Avatar, Heading } from "@chakra-ui/react";
 import { FiMenu } from "react-icons/fi";
 import NavItem from "./NavItem.jsx";
 import { CiLogout, CiSearch } from "react-icons/ci";
@@ -9,7 +9,6 @@ import { CgPlayListAdd } from "react-icons/cg";
 import { jwtDecode } from "jwt-decode";
 
 export default function Sidebar({ navSize, onToggleNav }) {
-  // const [navSize, changeNavSize] = useState("large");
   const navigate = useNavigate();
   const location = useLocation();
 

@@ -1,4 +1,3 @@
-import { useEffect, userStat } from "react";
 import { Dialog, Portal, Button, CloseButton } from "@chakra-ui/react";
 
 function DeleteContainerDialog({

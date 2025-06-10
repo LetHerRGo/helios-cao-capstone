@@ -26,7 +26,7 @@ function Track() {
   useEffect(() => {
     const isAuthenticated = localStorage.getItem("isAuthenticated");
     if (!isAuthenticated) {
-      navigate("/"); // if not login, direct to /
+      navigate("/");
     }
   }, [navigate]);
 
@@ -58,7 +58,6 @@ function Track() {
         localStorage.removeItem("token");
         navigate("/login");
       } else {
-        console.error("Request error:", error);
         setError(error.response.data.message);
       }
     }

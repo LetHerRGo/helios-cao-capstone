@@ -59,18 +59,6 @@ function Track() {
       return;
     }
 
-    //   try {
-    //     const response = await axios.get(`${apiUrl}trace`, {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //         "Content-Type": "application/json",
-    //       },
-    //     });
-    //     setCtnrData(response.data);
-    //   } catch (error) {
-    //     console.error("Error fetching data:", error);
-    //   }
-    // };
     readData(sortByColumn, sortOrder);
   }, [sortByColumn, sortOrder]);
 
@@ -86,7 +74,6 @@ function Track() {
       // Filter out the deleted row from state
       setCtnrData((prevData) => prevData.filter((item) => item.id !== id));
     } catch (error) {
-      console.error("Delete failed:", error);
       setError("Failed to delete container.");
     }
   };
@@ -141,7 +128,6 @@ function Track() {
           </Highlight>
         </Heading>
         {error && <p className="error">{error}</p>}
-        {/* <h2 className="table-title">Tracking Information</h2> */}
         <Box overflowX="auto">
           <Table.Root size="sm" striped>
             <Table.Header>

@@ -9,7 +9,6 @@ import {
   VStack,
   Text,
   Heading,
-  Flex,
 } from "@chakra-ui/react";
 import Logo from "../../assets/logo/logo_with_text.svg?react";
 
@@ -55,7 +54,6 @@ function LoginPage() {
       px={4}
     >
       <Logo style={{ width: "400px", height: "400px" }} />
-
       <Box
         bg="white"
         maxW="400px"
@@ -68,13 +66,11 @@ function LoginPage() {
           <Heading textAlign="center" color="#275765">
             Login
           </Heading>
-
           {error && (
             <Text color="red.500" fontSize="sm" textAlign="center">
               {error}
             </Text>
           )}
-
           <form onSubmit={handleSubmit}>
             <VStack spacing={4}>
               <Field.Root>
@@ -91,7 +87,6 @@ function LoginPage() {
                 />
                 <Field.ErrorText>{error}</Field.ErrorText>
               </Field.Root>
-
               <Field.Root>
                 <Field.Label>
                   Password
@@ -107,7 +102,6 @@ function LoginPage() {
                 />
                 <Field.ErrorText>{error}</Field.ErrorText>
               </Field.Root>
-
               <Button
                 type="submit"
                 color="white"
